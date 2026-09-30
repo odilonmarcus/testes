@@ -145,7 +145,7 @@ struct ContentView: View {
                             .lineLimit(1)
                         Text("\(document.characterCount.formatted()) caracteres" + (document.wasTruncated ? " • conteúdo truncado" : ""))
                             .font(.caption)
-                            .foregroundStyle(document.wasTruncated ? .orange : .secondary)
+                            .foregroundStyle(document.wasTruncated ? Color.orange : Color.secondary)
                     }
                     Spacer()
                     Button {

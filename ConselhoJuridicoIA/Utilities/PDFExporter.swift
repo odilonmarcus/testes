@@ -10,9 +10,13 @@ struct PDFExporter {
         textView.font = .systemFont(ofSize: 11)
         textView.string = text
 
-        var printOptions = NSPrintInfo.shared.dictionary()
-        printOptions[.jobDisposition] = NSPrintInfo.JobDisposition.save
-        printOptions[.jobSavingURL] = url
+        // NSPrintInfo.shared.dictionary() returns NSMutableDictionary, while
+        // NSPrintInfo(dictionary:) expects a typed Swift dictionary.
+        // Build the typed dictionary directly to keep Xcode 16 happy.
+        let printOptions: [NSPrintInfo.AttributeKey: Any] = [
+            .jobDisposition: NSPrintInfo.JobDisposition.save,
+            .jobSavingURL: url
+        ]
 
         let printInfo = NSPrintInfo(dictionary: printOptions)
         printInfo.orientation = .portrait
@@ -28,7 +32,11 @@ struct PDFExporter {
         operation.showsProgressPanel = false
 
         guard operation.run() else {
-            throw NSError(domain: "PDFExporter", code: 1, userInfo: [NSLocalizedDescriptionKey: "Não foi possível gerar o PDF."])
+            throw NSError(
+                domain: "PDFExporter",
+                code: 1,
+                userInfo: [NSLocalizedDescriptionKey: "Não foi possível gerar o PDF."]
+            )
         }
     }
 }
