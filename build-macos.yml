@@ -1,0 +1,26 @@
+name: Build macOS DMG
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - name: Baixar projeto
+        uses: actions/checkout@v4
+
+      - name: Selecionar Xcode
+        run: sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+
+      - name: Compilar e gerar DMG
+        run: |
+          chmod +x build_app.command
+          ./build_app.command
+
+      - name: Publicar instalador
+        uses: actions/upload-artifact@v4
+        with:
+          name: Conselho-Juridico-IA-macOS
+          path: dist/Conselho-Juridico-IA-macOS.dmg
+          if-no-files-found: error
